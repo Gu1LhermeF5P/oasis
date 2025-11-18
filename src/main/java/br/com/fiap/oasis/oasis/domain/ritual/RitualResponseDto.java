@@ -1,4 +1,4 @@
-package br.com.fiap.oasis.domain.ritual;
+package br.com.fiap.oasis.oasis.domain.ritual;
 
 public record RitualResponseDto(
     Long id,
@@ -6,7 +6,7 @@ public record RitualResponseDto(
     String sugestaoIA,
     Integer duracao
 ) {
-    // Construtor auxiliar que converte Entity -> DTO
+    
     public RitualResponseDto(Ritual ritual) {
         this(ritual.getId(), ritual.getTitulo(), ritual.getDescricaoGeradaPorIA(), ritual.getDuracaoMinutos());
     }
