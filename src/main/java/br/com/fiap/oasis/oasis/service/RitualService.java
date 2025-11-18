@@ -20,7 +20,7 @@ public class RitualService {
     @Autowired
     private RitualRepository repository;
 
-    // 2. MUDANÇA DE TIPO: ChatClient virou ChatModel para chamadas simples
+    
     @Autowired
     private ChatModel chatModel; 
 
@@ -33,7 +33,7 @@ public class RitualService {
         
         String prompt = "Crie uma dica rápida e prática de saúde mental para: " + dto.objetivo();
         
-        // 3. CHAMADA DO MÉTODO (Continua igual, mas usando o ChatModel)
+        
         String sugestao = chatModel.call(prompt);
 
         Ritual ritual = Ritual.builder()
