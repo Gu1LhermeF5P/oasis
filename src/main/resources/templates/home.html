@@ -1,85 +1,138 @@
 <!DOCTYPE html>
-<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" data-theme="dracula">
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" data-theme="light">
 <head>
     <meta charset="UTF-8">
-    <title>Oasis - Bem-estar e IA</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oasis - Equilíbrio Híbrido</title>
     
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.10.1/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.10.2/dist/full.min.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        
+        /* Definindo as cores exatas da Logo */
+        .oasis-gradient { background: linear-gradient(180deg, #D8EBF1 0%, #E8DCC6 100%); }
+        .text-oasis-dark { color: #1B3A4B; }
+        .bg-oasis-teal { background-color: #2A8C82; color: white; }
+        .bg-oasis-teal:hover { background-color: #206e66; }
+        .text-oasis-teal { color: #2A8C82; }
+        .border-oasis-teal { border-color: #2A8C82; }
+    </style>
 </head>
-<body class="min-h-screen bg-base-200">
+<body class="min-h-screen oasis-gradient text-[#1B3A4B]">
 
-    <div class="navbar bg-primary text-primary-content shadow-lg mb-8">
-        <div class="flex-1">
-            <a class="btn btn-ghost text-xl">🌴 OASIS</a>
+    <div class="navbar bg-white/50 backdrop-blur-md shadow-sm px-4 md:px-8 sticky top-0 z-50">
+        <div class="flex-1 gap-2 items-center">
+            <div class="w-8 h-8 rounded-full bg-oasis-teal flex items-center justify-center text-white font-bold">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+            </div>
+            <span class="text-xl font-bold tracking-widest uppercase text-oasis-dark">Oásîs</span>
         </div>
-        <div class="flex-none">
-            <button class="btn btn-square btn-ghost">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-5 h-5 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"></path></svg>
-            </button>
+        <div class="flex-none gap-2">
+            <div class="badge border-none bg-oasis-teal/10 text-oasis-teal font-semibold">Equilíbrio Híbrido</div>
+            <div class="avatar placeholder">
+                <div class="bg-oasis-teal text-white rounded-full w-9 ring ring-white ring-offset-2">
+                    <span>US</span>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="container mx-auto px-4">
+    <div class="container mx-auto p-6 max-w-5xl">
         
-        <div class="flex justify-between items-center mb-6">
-            <h1 class="text-3xl font-bold">Seus Rituais</h1>
-            <button onclick="my_modal_1.showModal()" class="btn btn-secondary">
-                + Novo Ritual com IA
+        <div class="flex flex-col md:flex-row justify-between items-center mb-10 gap-4 mt-4">
+            <div>
+                <h1 class="text-4xl font-bold text-oasis-dark">Seus Rituais</h1>
+                <p class="text-oasis-dark/70 mt-1">Tecnologia e natureza em harmonia para seu bem-estar.</p>
+            </div>
+            <button onclick="my_modal_1.showModal()" class="btn bg-oasis-teal border-none shadow-lg hover:scale-105 transition-transform text-white gap-2 px-6">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                </svg>
+                Novo Ritual IA
             </button>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             
-            <div th:each="ritual : ${rituais}" class="card bg-base-100 shadow-xl hover:scale-105 transition-transform">
+            <div th:each="ritual : ${rituais}" class="card bg-white/80 backdrop-blur-sm shadow-xl border-t-4 border-oasis-teal hover:shadow-2xl transition-all duration-300">
                 <div class="card-body">
-                    <h2 class="card-title">
-                        <span th:text="${ritual.titulo}">Título do Ritual</span>
-                        <div class="badge badge-accent" th:text="${ritual.duracaoMinutos} + ' min'">5 min</div>
-                    </h2>
-                    <p class="text-gray-400 text-sm mt-2">Sugestão da IA:</p>
-                    <p th:text="${ritual.descricaoGeradaPorIA}" class="italic text-sm">
+                    <div class="flex justify-between items-start">
+                        <h2 class="card-title text-lg text-oasis-dark font-bold" th:text="${ritual.titulo}">Título</h2>
+                        <div class="badge bg-oasis-teal text-white border-none" th:text="${ritual.duracaoMinutos} + ' min'">10 min</div>
+                    </div>
+                    
+                    <div class="h-px bg-gradient-to-r from-transparent via-oasis-teal/20 to-transparent my-3"></div>
+                    
+                    <p class="text-xs font-bold uppercase text-oasis-teal tracking-wider mb-1">Sugestão Inteligente:</p>
+                    <p th:text="${ritual.descricaoGeradaPorIA}" class="text-sm text-gray-600 italic leading-relaxed">
                         Descrição gerada...
                     </p>
+                    
                     <div class="card-actions justify-end mt-4">
-                        <button class="btn btn-primary btn-sm">Iniciar</button>
+                        <button class="btn btn-sm btn-ghost text-oasis-teal hover:bg-oasis-teal/10">Detalhes</button>
+                        <button class="btn btn-sm bg-oasis-teal border-none text-white">Iniciar</button>
                     </div>
                 </div>
             </div>
 
-            <div th:if="${rituais.empty}" class="col-span-full text-center p-10">
-                <p class="text-lg">Nenhum ritual encontrado. Crie o primeiro!</p>
+            <div th:if="${rituais.empty}" class="col-span-full flex flex-col items-center justify-center py-24 text-center bg-white/60 rounded-3xl border border-dashed border-oasis-teal/30">
+                <div class="w-20 h-20 bg-oasis-teal/10 rounded-full flex items-center justify-center mb-4 text-oasis-teal">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold text-oasis-dark">Equilíbrio Pendente</h3>
+                <p class="py-2 max-w-md text-oasis-dark/70">Use nossa Inteligência Híbrida para gerar seu primeiro ritual de bem-estar.</p>
             </div>
-
         </div>
     </div>
 
-    <dialog id="my_modal_1" class="modal">
-        <div class="modal-box">
-            <h3 class="font-bold text-lg mb-4">Gerar Ritual com IA</h3>
+    <dialog id="my_modal_1" class="modal modal-bottom sm:modal-middle backdrop-blur-sm">
+        <div class="modal-box bg-white">
+            <h3 class="font-bold text-2xl mb-1 text-oasis-dark flex items-center gap-2">
+                <span class="text-oasis-teal">✦</span> Novo Ritual
+            </h3>
+            <p class="text-sm text-gray-500 mb-6">Nossa IA processará seu estado emocional para sugerir o equilíbrio ideal.</p>
             
             <form action="/app/rituais/novo" method="post">
-                <div class="form-control w-full mb-3">
-                    <label class="label"><span class="label-text">Título</span></label>
-                    <input type="text" name="titulo" placeholder="Ex: Pausa Café" class="input input-bordered w-full" required />
-                </div>
-
-                <div class="form-control w-full mb-3">
-                    <label class="label"><span class="label-text">Objetivo (Prompt IA)</span></label>
-                    <textarea name="objetivo" class="textarea textarea-bordered" placeholder="Ex: Estou muito estressado com uma reunião" required></textarea>
+                <div class="form-control w-full mb-4">
+                    <label class="label"><span class="label-text font-semibold text-oasis-dark">Nome do Ritual</span></label>
+                    <input type="text" name="titulo" placeholder="Ex: Pausa Digital" class="input input-bordered focus:border-oasis-teal focus:ring-1 focus:ring-oasis-teal bg-gray-50" required />
                 </div>
 
                 <div class="form-control w-full mb-4">
-                    <label class="label"><span class="label-text">Duração (min)</span></label>
-                    <input type="number" name="duracaoMinutos" value="5" class="input input-bordered w-full" />
+                    <label class="label"><span class="label-text font-semibold text-oasis-dark">Como você está se sentindo?</span></label>
+                    <textarea name="objetivo" class="textarea textarea-bordered h-24 focus:border-oasis-teal focus:ring-1 focus:ring-oasis-teal bg-gray-50" placeholder="Ex: Sinto fadiga visual e mental após 4h de código..." required></textarea>
+                </div>
+
+                <div class="form-control w-full mb-6">
+                    <label class="label"><span class="label-text font-semibold text-oasis-dark">Tempo (min)</span></label>
+                    <input type="range" min="1" max="60" value="5" class="range range-xs" style="--range-shdw: #2A8C82;" name="duracaoMinutos" oninput="timeVal.innerText = this.value + ' min'" />
+                    <div class="w-full flex justify-between text-xs px-2 mt-2 text-gray-400">
+                        <span>1m</span>
+                        <span id="timeVal" class="font-bold text-oasis-teal text-lg">5 min</span>
+                        <span>60m</span>
+                    </div>
                 </div>
 
                 <div class="modal-action">
-                    <button type="submit" class="btn btn-primary">Gerar ✨</button>
-                    <form method="dialog"><button class="btn">Cancelar</button></form>
+                    <form method="dialog">
+                        <button class="btn btn-ghost text-gray-500 hover:bg-gray-100">Cancelar</button>
+                    </form>
+                    <button type="submit" class="btn bg-oasis-teal border-none text-white hover:bg-[#206e66]">Gerar Solução 🧠</button>
                 </div>
             </form>
         </div>
+        <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+        </form>
     </dialog>
 
 </body>
