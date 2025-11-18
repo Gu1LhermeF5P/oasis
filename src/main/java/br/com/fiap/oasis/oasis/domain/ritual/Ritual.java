@@ -8,6 +8,9 @@ import java.time.LocalDateTime;
 @Table(name = "TB_RITUAIS")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class Ritual {
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User usuario;
     
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
