@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <title>Oasis - Editar</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.10.2/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .bg-oasis-gradient { background: linear-gradient(135deg, #D8EBF1 0%, #E8DCC6 100%); min-height: 100vh; }
+        .text-brand { color: #1B3A4B; }
+        .btn-brand { background-color: #2A8C82; border: none; color: white; }
+        .btn-brand:hover { background-color: #206e66; }
+    </style>
+</head>
+<body class="bg-oasis-gradient flex items-center justify-center p-4">
+
+    <div class="card w-full max-w-lg bg-white shadow-xl border-t-8 border-[#2A8C82]">
+        <div class="card-body">
+            <h2 class="card-title text-2xl font-bold text-brand mb-6">✏️ Editar Ritual</h2>
+            
+            <form th:action="@{/app/rituais/editar/{id}(id=${ritual.id})}" method="post">
+                
+                <div class="form-control w-full mb-4">
+                    <label class="label"><span class="label-text font-bold text-brand opacity-70">Título</span></label>
+                    <input type="text" name="titulo" th:value="${ritual.titulo}" class="input input-bordered w-full focus:border-[#2A8C82]" required />
+                </div>
+
+                <div class="form-control w-full mb-6">
+                    <label class="label">
+                        <span class="label-text font-bold text-brand opacity-70">Duração (min)</span>
+                        <span id="timeVal" class="font-bold text-brand" th:text="${ritual.duracaoMinutos} + ' min'">5 min</span>
+                    </label>
+                    <input type="range" min="1" max="60" th:value="${ritual.duracaoMinutos}" class="range range-xs accent-[#2A8C82]" style="color: #2A8C82;" name="duracaoMinutos" oninput="timeVal.innerText = this.value + ' min'" />
+                </div>
+
+                <input type="hidden" name="objetivo" value="EdicaoManual" />
+
+                <div class="card-actions justify-end mt-4">
+                    <a href="/app/rituais" class="btn btn-ghost text-gray-500">Cancelar</a>
+                    <button type="submit" class="btn btn-brand px-8">Salvar Alterações</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

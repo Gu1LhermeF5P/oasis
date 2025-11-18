@@ -70,7 +70,12 @@
                     
                     <p th:text="${ritual.descricaoGeradaPorIA}" class="text-sm text-gray-600 leading-relaxed min-h-[60px]">Descrição...</p>
                     
-                    <div class="card-actions justify-end mt-6">
+                    <div class="card-actions justify-end mt-6 items-center gap-2">
+                        
+                        <a th:href="@{/app/rituais/editar/{id}(id=${ritual.id})}" class="btn btn-sm btn-ghost text-blue-600 hover:bg-blue-50">
+                            Editar
+                        </a>
+
                         <form th:action="@{/app/rituais/deletar/{id}(id=${ritual.id})}" method="post">
                             <button type="submit" class="btn btn-sm btn-ghost text-brand hover:bg-red-100 hover:text-red-500">Arquivar</button>
                         </form>
