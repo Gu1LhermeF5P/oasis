@@ -26,6 +26,7 @@ public class RitualService {
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
+    // --- C: CREATE (Com IA e Mensageria) ---
     @Transactional
     @CacheEvict(value = "rituais", allEntries = true)
     public Ritual gerarRitualComIA(RitualRequestDto dto) {
@@ -33,15 +34,16 @@ public class RitualService {
         String prompt = "Crie uma dica rápida e prática de saúde mental para: " + dto.objetivo();
         String sugestao;
 
-        // --- BLINDAGEM CONTRA FALHAS DA OPENAI ---
+        // 1. BLINDAGEM CONTRA FALHAS DA OPENAI
         try {
             sugestao = chatModel.call(prompt);
         } catch (Exception e) {
-            // Se a API falhar (sem saldo, erro de rede), usamos um texto padrão para não quebrar a tela
             System.err.println("ERRO NA IA: " + e.getMessage());
+            // Fallback: Texto padrão caso a IA falhe
             sugestao = "Sugestão offline: Respire fundo por 5 minutos e beba um copo d'água. (Serviço de IA indisponível no momento).";
         }
 
+        // 2. MONTAGEM DO OBJETO
         Ritual ritual = Ritual.builder()
                 .titulo(dto.titulo())
                 .duracaoMinutos(dto.duracaoMinutos())
@@ -49,9 +51,10 @@ public class RitualService {
                 .dataCriacao(LocalDateTime.now())
                 .build();
         
+        // 3. PERSISTÊNCIA
         repository.save(ritual);
 
-        
+        // 4. MENSAGERIA (Com proteção contra queda do RabbitMQ)
         try {
             rabbitTemplate.convertAndSend("oasis-exchange", "ritual.created", ritual.getId());
         } catch (Exception e) {
@@ -61,33 +64,40 @@ public class RitualService {
         return ritual;
     }
 
+    // --- R: READ (Listar com Paginação e Cache) ---
     @Cacheable(value = "rituais")
     public Page<Ritual> listar(Pageable pageable) {
         return repository.findAll(pageable);
     }
 
-    
-    @Transactional
-    @CacheEvict(value = "rituais", allEntries = true)
-    public void deletar(Long id) {
-        repository.deleteById(id);
-    }
-    
-    public Ritual buscarPorId(Long id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Ritual não encontrado: " + id));
-    }
-
-    
+    // --- U: UPDATE (Atualizar Dados) ---
     @Transactional
     @CacheEvict(value = "rituais", allEntries = true)
     public void atualizar(Long id, RitualRequestDto dto) {
         Ritual ritual = buscarPorId(id);
         
-        // Atualiza os dados
+        
         ritual.setTitulo(dto.titulo());
         ritual.setDuracaoMinutos(dto.duracaoMinutos());
         
+        
         repository.save(ritual);
+    }
+
+    // --- D: DELETE (Remover) ---
+    @Transactional
+    @CacheEvict(value = "rituais", allEntries = true)
+    public void deletar(Long id) {
+        // Verifica se existe antes de tentar apagar
+        if (!repository.existsById(id)) {
+            throw new IllegalArgumentException("Ritual não encontrado para exclusão");
+        }
+        repository.deleteById(id);
+    }
+    
+    
+    public Ritual buscarPorId(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Ritual não encontrado: " + id));
     }
 }
