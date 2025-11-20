@@ -18,7 +18,7 @@ A aplicação foi construída seguindo os princípios de **arquitetura resilient
 
 ### 🌐 Deploy em Nuvem
 A aplicação está rodando na nuvem (Railway):
-**[Acessar OASIS na Nuvem](https://oasis-production.up.railway.app)** (Link exemplo - Substitua pelo seu se tiver)
+**[Acessar OASIS ](oasis-production-0020.up.railway.app)** (Link exemplo - Substitua pelo seu se tiver)
 
 ---
 
