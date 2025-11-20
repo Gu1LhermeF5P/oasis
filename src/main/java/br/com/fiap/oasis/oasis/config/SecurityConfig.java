@@ -40,15 +40,11 @@ public class SecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        // {noop} significa "No Operation" - sem criptografia
         UserDetails user = User.builder()
             .username("admin")
             .password("{noop}123456") 
             .roles("USER")
             .build();
-
-        System.out.println("🔓 CONFIGURAÇÃO DE SEGURANÇA CARREGADA: admin / 123456");
-
         return new InMemoryUserDetailsManager(user);
     }
 }

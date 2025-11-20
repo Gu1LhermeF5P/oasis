@@ -14,23 +14,31 @@
         .bg-brand { background-color: #2A8C82; }
         .btn-brand { background-color: #2A8C82; border: none; color: white; }
         .btn-brand:hover { background-color: #206e66; }
+        .border-brand { border-color: #2A8C82; }
     </style>
 </head>
 <body class="min-h-screen bg-oasis-gradient text-[#1B3A4B]">
 
+    <!-- NAVBAR -->
     <div class="navbar bg-white/60 backdrop-blur-md shadow-sm px-6 sticky top-0 z-50 border-b border-white/20 flex justify-between">
         <div class="flex items-center gap-2">
             <a class="text-2xl font-extrabold text-brand tracking-[0.15em] uppercase cursor-pointer">Oásîs</a>
-            <div class="hidden md:flex badge bg-white/50 border-none text-brand font-semibold shadow-sm">Java Advanced</div>
+            <div class="hidden md:flex badge bg-white/50 border-none text-brand font-semibold shadow-sm">Meu Espaço</div>
         </div>
         
         <div class="flex items-center gap-4">
+            <!-- Avatar -->
             <div class="avatar placeholder">
-                <div class="bg-brand text-white rounded-full w-8 ring ring-white ring-offset-2 shadow-md"><span class="text-xs font-bold">US</span></div>
+                <div class="bg-brand text-white rounded-full w-9 ring ring-white ring-offset-2 shadow-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+                    </svg>
+                </div>
             </div>
 
+            <!-- Botão X para Sair -->
             <form th:action="@{/logout}" method="post" class="flex items-center">
-                <button type="submit" class="btn btn-circle btn-ghost btn-sm hover:bg-red-100 hover:text-red-500" title="Sair do Sistema">
+                <button type="submit" class="btn btn-circle btn-ghost btn-sm hover:bg-red-100 hover:text-red-500" title="Sair">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
@@ -39,6 +47,7 @@
         </div>
     </div>
 
+    <!-- CONTEÚDO -->
     <div class="container mx-auto p-6 max-w-6xl">
         
         <div th:if="${param.error}" class="alert alert-warning shadow-lg mb-6">
@@ -55,6 +64,7 @@
             </button>
         </div>
 
+        <!-- Grid de Cards -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             
             <div th:each="ritual : ${rituais}" class="card bg-white/80 backdrop-blur-md shadow-xl hover:shadow-2xl transition-all duration-300 border-t-4 border-brand group">
@@ -82,32 +92,41 @@
                 </div>
             </div>
 
-            <div th:if="${rituais.empty}" class="col-span-full py-24 flex flex-col items-center justify-center text-center bg-white/40 rounded-3xl border-2 border-dashed border-brand/30">
-                <h3 class="text-2xl font-bold text-brand mb-2">Comece sua jornada</h3>
-                <p class="max-w-md text-brand opacity-70">Nenhum ritual encontrado.</p>
+            <!-- Estado Vazio / Boas-vindas -->
+            <div th:if="${rituais.empty}" class="col-span-full">
+                <div class="hero bg-white/50 rounded-3xl border-2 border-dashed border-brand/20 p-10">
+                    <div class="hero-content text-center">
+                        <div class="max-w-lg">
+                            <h1 class="text-5xl font-extrabold text-brand mb-4">Bem-vindo ao Oasis</h1>
+                            <p class="py-2 text-lg text-gray-600 font-medium">Seu refúgio pessoal para o equilíbrio híbrido.</p>
+                            <div class="bg-white/80 p-6 rounded-xl shadow-sm text-left mt-6 border border-white">
+                                <h3 class="font-bold text-brand mb-3">Como funciona?</h3>
+                                <ul class="space-y-3 text-sm text-gray-600">
+                                    <li>• Clique em <b>+ Novo Ritual</b>.</li>
+                                    <li>• Conte como se sente (ex: "estressado").</li>
+                                    <li>• Receba uma sugestão e use o <b>Cronômetro</b>.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
+    <!-- MODAL DE CRIAÇÃO -->
     <dialog id="my_modal_1" class="modal modal-bottom sm:modal-middle backdrop-blur-sm">
         <div class="modal-box bg-white border-t-8 border-brand p-8">
             <h3 class="font-bold text-2xl mb-2 text-brand">Gerar Ritual</h3>
-            <p class="text-sm text-gray-500 mb-8">A IA vai criar algo personalizado.</p>
+            <p class="text-sm text-gray-500 mb-8">A IA definirá o melhor tempo para você.</p>
             <form action="/app/rituais/novo" method="post">
                 <div class="form-control w-full mb-5">
                     <label class="label p-0 mb-2"><span class="label-text font-bold text-xs text-brand opacity-70">TÍTULO</span></label>
                     <input type="text" name="titulo" class="input input-bordered w-full bg-gray-50" required />
                 </div>
-                <div class="form-control w-full mb-5">
+                <div class="form-control w-full mb-8">
                     <label class="label p-0 mb-2"><span class="label-text font-bold text-xs text-brand opacity-70">COMO VOCÊ SE SENTE?</span></label>
                     <textarea name="objetivo" class="textarea textarea-bordered h-28 bg-gray-50" required></textarea>
-                </div>
-                <div class="form-control w-full mb-8">
-                    <label class="label p-0 mb-2">
-                        <span class="label-text font-bold text-xs text-brand opacity-70">DURAÇÃO</span>
-                        <span id="timeVal" class="font-bold text-brand text-sm bg-brand/10 px-2 py-1 rounded">5 min</span>
-                    </label>
-                    <input type="range" min="1" max="10" value="5" class="range range-xs accent-[#2A8C82]" style="color: #2A8C82;" name="duracaoMinutos" oninput="timeVal.innerText = this.value + ' min'" />
                 </div>
                 <div class="modal-action flex justify-between items-center">
                     <form method="dialog"><button class="btn btn-ghost text-gray-400">Cancelar</button></form>
@@ -118,70 +137,43 @@
         <form method="dialog" class="modal-backdrop"><button>close</button></form>
     </dialog>
 
-
+    <!-- MODAL DO TIMER -->
     <dialog id="timer_modal" class="modal backdrop-blur-md">
         <div class="modal-box bg-brand text-white text-center py-12">
-            <h3 id="timerTitle" class="font-bold text-3xl mb-2 opacity-90">Título do Ritual</h3>
-            <p class="opacity-70 mb-8">Concentre-se e respire.</p>
-            
-            <div class="text-8xl font-black font-mono mb-8 tracking-widest">
-                <span id="timerDisplay">00:00</span>
-            </div>
-            
+            <h3 id="timerTitle" class="font-bold text-3xl mb-2 opacity-90">Título</h3>
+            <p class="opacity-70 mb-8">Concentre-se.</p>
+            <div class="text-8xl font-black font-mono mb-8 tracking-widest"><span id="timerDisplay">00:00</span></div>
             <div class="modal-action justify-center">
-                <form method="dialog">
-                    <button onclick="pararTimer()" class="btn btn-white text-brand hover:bg-gray-200 px-8 font-bold">
-                        Encerrar Ritual
-                    </button>
-                </form>
+                <form method="dialog"><button onclick="pararTimer()" class="btn btn-white text-brand hover:bg-gray-200 px-8 font-bold">Encerrar</button></form>
             </div>
         </div>
     </dialog>
 
     <script>
-        let interval; 
-
+        let interval;
         function iniciarTimer(minutos, titulo) {
-            
             document.getElementById('timerTitle').innerText = titulo;
-            
-           
             let tempoRestante = minutos * 60;
-            
             const display = document.getElementById('timerDisplay');
             const modal = document.getElementById('timer_modal');
-
-            
             modal.showModal();
-
-           
             function atualizarDisplay() {
                 let m = Math.floor(tempoRestante / 60);
                 let s = tempoRestante % 60;
-                
-                
                 m = m < 10 ? '0' + m : m;
                 s = s < 10 ? '0' + s : s;
-                
                 display.innerText = `${m}:${s}`;
-
                 if (tempoRestante <= 0) {
                     clearInterval(interval);
                     display.innerText = "FIM!";
-                    // Poderia tocar um som aqui
                 }
                 tempoRestante--;
             }
-
-            
             atualizarDisplay();
-            clearInterval(interval); 
+            clearInterval(interval);
             interval = setInterval(atualizarDisplay, 1000);
         }
-
-        function pararTimer() {
-            clearInterval(interval);
-        }
+        function pararTimer() { clearInterval(interval); }
     </script>
 
 </body>

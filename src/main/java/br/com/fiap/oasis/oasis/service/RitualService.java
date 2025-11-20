@@ -26,35 +26,48 @@ public class RitualService {
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
-    // --- C: CREATE (Com IA e Mensageria) ---
+    // --- C: CREATE (Com IA, Lógica de Tempo e Mensageria) ---
     @Transactional
     @CacheEvict(value = "rituais", allEntries = true)
     public Ritual gerarRitualComIA(RitualRequestDto dto) {
         
+        // 1. Prompt Otimizado: Pede algo curto e direto
         String prompt = "Crie uma dica de saúde mental MUITO CURTA e direta (máximo 200 caracteres) para: " + dto.objetivo();
         String sugestao;
-        
-        // 1. BLINDAGEM CONTRA FALHAS DA OPENAI
+
+        // 2. Blindagem contra falhas da IA (Groq/OpenAI)
         try {
             sugestao = chatModel.call(prompt);
         } catch (Exception e) {
             System.err.println("ERRO NA IA: " + e.getMessage());
-            // Fallback: Texto padrão caso a IA falhe
             sugestao = "Sugestão offline: Respire fundo por 5 minutos e beba um copo d'água. (Serviço de IA indisponível no momento).";
         }
 
-        // 2. MONTAGEM DO OBJETO
+        // 3. Lógica de Tempo Inteligente (Se vier nulo/zero)
+        Integer tempoFinal = dto.duracaoMinutos();
+        if (tempoFinal == null || tempoFinal == 0) {
+            String obj = dto.objetivo().toLowerCase();
+            if (obj.contains("cansado") || obj.contains("exausto") || obj.contains("estresse")) {
+                tempoFinal = 5; // Rituais rápidos para alívio
+            } else if (obj.contains("foco") || obj.contains("trabalho") || obj.contains("estudar")) {
+                tempoFinal = 25; // Pomodoro
+            } else {
+                tempoFinal = 10; // Padrão seguro
+            }
+        }
+
+        // 4. Montagem do Objeto
         Ritual ritual = Ritual.builder()
                 .titulo(dto.titulo())
-                .duracaoMinutos(dto.duracaoMinutos())
+                .duracaoMinutos(tempoFinal)
                 .descricaoGeradaPorIA(sugestao)
                 .dataCriacao(LocalDateTime.now())
                 .build();
         
-        // 3. PERSISTÊNCIA
+        // 5. Persistência
         repository.save(ritual);
 
-        // 4. MENSAGERIA (Com proteção contra queda do RabbitMQ)
+        // 6. Mensageria (Com proteção contra queda do RabbitMQ)
         try {
             rabbitTemplate.convertAndSend("oasis-exchange", "ritual.created", ritual.getId());
         } catch (Exception e) {
@@ -76,10 +89,13 @@ public class RitualService {
     public void atualizar(Long id, RitualRequestDto dto) {
         Ritual ritual = buscarPorId(id);
         
-        
+        // Atualiza dados manuais
         ritual.setTitulo(dto.titulo());
-        ritual.setDuracaoMinutos(dto.duracaoMinutos());
         
+        // Se vier tempo na edição, atualiza. Se não, mantém o antigo.
+        if (dto.duracaoMinutos() != null && dto.duracaoMinutos() > 0) {
+            ritual.setDuracaoMinutos(dto.duracaoMinutos());
+        }
         
         repository.save(ritual);
     }
@@ -88,13 +104,11 @@ public class RitualService {
     @Transactional
     @CacheEvict(value = "rituais", allEntries = true)
     public void deletar(Long id) {
-        // Verifica se existe antes de tentar apagar
         if (!repository.existsById(id)) {
             throw new IllegalArgumentException("Ritual não encontrado para exclusão");
         }
         repository.deleteById(id);
     }
-    
     
     public Ritual buscarPorId(Long id) {
         return repository.findById(id)
