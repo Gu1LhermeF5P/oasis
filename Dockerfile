@@ -1,15 +1,30 @@
-# 1. Imagem base com Java 17
-FROM eclipse-temurin:17-jdk-alpine
-
-# 2. Define pasta de trabalho
+# --- Estágio 1: Build (Construção) ---
+FROM maven:3.9.6-eclipse-temurin-17 AS build
 WORKDIR /app
 
-# 3. Copia o arquivo .jar gerado para dentro do container
-# (O nome do jar deve bater com o que está no seu target)
-COPY target/oasis-core-1.0.0.jar app.jar
+# Copia o arquivo de dependências
+COPY pom.xml .
 
-# 4. Expõe a porta 8080
+# Baixa as dependências (para cachear e ser mais rápido nas próximas vezes)
+# Nota: Se der erro de dependência, pode comentar a linha abaixo, mas ela ajuda na velocidade
+RUN mvn dependency:go-offline -B
+
+# Copia todo o código fonte
+COPY src ./src
+
+# Compila o projeto e gera o .jar (pula testes para ser rápido)
+RUN mvn clean package -DskipTests
+
+# --- Estágio 2: Runtime (Execução) ---
+FROM eclipse-temurin:17-jdk-alpine
+WORKDIR /app
+
+# Copia o .jar gerado no estágio anterior para a imagem final
+# O nome do arquivo gerado pode variar, usamos asterisco para garantir
+COPY --from=build /app/target/*.jar app.jar
+
+# Expõe a porta
 EXPOSE 8080
 
-# 5. Comando para rodar
+# Comando para rodar
 ENTRYPOINT ["java", "-jar", "app.jar"]
