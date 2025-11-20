@@ -31,9 +31,9 @@ public class RitualService {
     @CacheEvict(value = "rituais", allEntries = true)
     public Ritual gerarRitualComIA(RitualRequestDto dto) {
         
-        String prompt = "Crie uma dica rápida e prática de saúde mental para: " + dto.objetivo();
+        String prompt = "Crie uma dica de saúde mental MUITO CURTA e direta (máximo 200 caracteres) para: " + dto.objetivo();
         String sugestao;
-
+        
         // 1. BLINDAGEM CONTRA FALHAS DA OPENAI
         try {
             sugestao = chatModel.call(prompt);
