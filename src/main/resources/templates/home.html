@@ -14,39 +14,41 @@
         .bg-brand { background-color: #2A8C82; }
         .btn-brand { background-color: #2A8C82; border: none; color: white; }
         .btn-brand:hover { background-color: #206e66; }
-        .border-brand { border-color: #2A8C82; }
     </style>
 </head>
 <body class="min-h-screen bg-oasis-gradient text-[#1B3A4B]">
 
-    <div class="navbar bg-white/60 backdrop-blur-md shadow-sm px-6 sticky top-0 z-50 border-b border-white/20">
-        <div class="flex-1">
-            <a class="text-2xl font-extrabold text-brand tracking-[0.15em] uppercase hover:opacity-80 transition-opacity cursor-pointer">Oásîs</a>
-        </div>
-        <div class="flex-none gap-4">
+    <div class="navbar bg-white/60 backdrop-blur-md shadow-sm px-6 sticky top-0 z-50 border-b border-white/20 flex justify-between">
+        <div class="flex items-center gap-2">
+            <a class="text-2xl font-extrabold text-brand tracking-[0.15em] uppercase cursor-pointer">Oásîs</a>
             <div class="hidden md:flex badge bg-white/50 border-none text-brand font-semibold shadow-sm">Java Advanced</div>
-            <div class="dropdown dropdown-end">
-                <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar placeholder">
-                    <div class="bg-brand text-white rounded-full w-10 ring ring-white ring-offset-2 shadow-md"><span class="text-xs font-bold">US</span></div>
-                </div>
-                <ul tabindex="0" class="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-white rounded-box w-52">
-                    <li><form th:action="@{/logout}" method="post"><button type="submit" class="text-red-500 font-bold">Sair do Sistema</button></form></li>
-                </ul>
+        </div>
+        
+        <div class="flex items-center gap-4">
+            <div class="avatar placeholder">
+                <div class="bg-brand text-white rounded-full w-8 ring ring-white ring-offset-2 shadow-md"><span class="text-xs font-bold">US</span></div>
             </div>
+
+            <form th:action="@{/logout}" method="post" class="flex items-center">
+                <button type="submit" class="btn btn-circle btn-ghost btn-sm hover:bg-red-100 hover:text-red-500" title="Sair do Sistema">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </form>
         </div>
     </div>
 
     <div class="container mx-auto p-6 max-w-6xl">
         
         <div th:if="${param.error}" class="alert alert-warning shadow-lg mb-6">
-            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
-            <span>Atenção: O serviço de IA está instável. Um ritual padrão foi gerado.</span>
+            <span>Atenção: IA instável. Modo offline ativado.</span>
         </div>
 
         <div class="flex flex-col md:flex-row justify-between items-center mb-12 mt-8 gap-6">
             <div class="text-center md:text-left">
                 <h1 class="text-4xl font-bold text-brand mb-2">Seus Rituais</h1>
-                <p class="text-brand opacity-70 font-medium">Gerencie seu equilíbrio híbrido com Inteligência Artificial.</p>
+                <p class="text-brand opacity-70 font-medium">Gerencie seu equilíbrio híbrido.</p>
             </div>
             <button onclick="my_modal_1.showModal()" class="btn btn-brand shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all px-8 h-12 text-sm tracking-wider font-bold uppercase rounded-full">
                 <span class="text-lg mr-1">+</span> Novo Ritual
@@ -58,29 +60,24 @@
             <div th:each="ritual : ${rituais}" class="card bg-white/80 backdrop-blur-md shadow-xl hover:shadow-2xl transition-all duration-300 border-t-4 border-brand group">
                 <div class="card-body p-6">
                     <div class="flex justify-between items-start mb-4">
-                        <h2 class="card-title text-lg text-brand font-bold group-hover:text-[#2A8C82] transition-colors" th:text="${ritual.titulo}">Título</h2>
+                        <h2 class="card-title text-lg text-brand font-bold" th:text="${ritual.titulo}">Título</h2>
                         <div class="badge bg-brand text-white border-none font-bold shadow-sm" th:text="${ritual.duracaoMinutos} + ' min'">10 min</div>
                     </div>
                     
                     <div class="h-px w-full bg-gradient-to-r from-transparent via-gray-300 to-transparent mb-4 opacity-50"></div>
                     
-                    <div class="flex items-center gap-2 mb-2">
-                        <span class="text-brand text-xs font-bold tracking-widest uppercase opacity-60">Sugestão IA</span>
-                    </div>
-                    
                     <p th:text="${ritual.descricaoGeradaPorIA}" class="text-sm text-gray-600 leading-relaxed min-h-[60px]">Descrição...</p>
                     
                     <div class="card-actions justify-end mt-6 items-center gap-2">
-                        
-                        <a th:href="@{/app/rituais/editar/{id}(id=${ritual.id})}" class="btn btn-sm btn-ghost text-blue-600 hover:bg-blue-50">
-                            Editar
-                        </a>
+                        <a th:href="@{/app/rituais/editar/{id}(id=${ritual.id})}" class="btn btn-sm btn-ghost text-blue-600 hover:bg-blue-50">Editar</a>
 
                         <form th:action="@{/app/rituais/deletar/{id}(id=${ritual.id})}" method="post">
                             <button type="submit" class="btn btn-sm btn-ghost text-brand hover:bg-red-100 hover:text-red-500">Arquivar</button>
                         </form>
                         
-                        <button class="btn btn-sm btn-brand px-6 shadow-md">Iniciar</button>
+                        <button th:onclick="iniciarTimer([[${ritual.duracaoMinutos}]], [[${ritual.titulo}]])" class="btn btn-sm btn-brand px-6 shadow-md">
+                            Iniciar
+                        </button>
                     </div>
                 </div>
             </div>
@@ -89,42 +86,103 @@
                 <h3 class="text-2xl font-bold text-brand mb-2">Comece sua jornada</h3>
                 <p class="max-w-md text-brand opacity-70">Nenhum ritual encontrado.</p>
             </div>
-
         </div>
     </div>
 
     <dialog id="my_modal_1" class="modal modal-bottom sm:modal-middle backdrop-blur-sm">
         <div class="modal-box bg-white border-t-8 border-brand p-8">
-            <h3 class="font-bold text-2xl mb-2 text-brand tracking-tight">Gerar Ritual</h3>
-            <p class="text-sm text-gray-500 mb-8">Nossa IA criará uma solução baseada no seu momento atual.</p>
-            
+            <h3 class="font-bold text-2xl mb-2 text-brand">Gerar Ritual</h3>
+            <p class="text-sm text-gray-500 mb-8">A IA vai criar algo personalizado.</p>
             <form action="/app/rituais/novo" method="post">
                 <div class="form-control w-full mb-5">
-                    <label class="label p-0 mb-2"><span class="label-text font-bold text-xs text-brand tracking-widest uppercase opacity-70">Título</span></label>
-                    <input type="text" name="titulo" placeholder="Ex: Foco Profundo" class="input input-bordered w-full bg-gray-50 focus:bg-white focus:border-[#2A8C82] focus:ring-0 transition-all" required />
+                    <label class="label p-0 mb-2"><span class="label-text font-bold text-xs text-brand opacity-70">TÍTULO</span></label>
+                    <input type="text" name="titulo" class="input input-bordered w-full bg-gray-50" required />
                 </div>
-
                 <div class="form-control w-full mb-5">
-                    <label class="label p-0 mb-2"><span class="label-text font-bold text-xs text-brand tracking-widest uppercase opacity-70">Como você se sente?</span></label>
-                    <textarea name="objetivo" class="textarea textarea-bordered h-28 bg-gray-50 focus:bg-white focus:border-[#2A8C82] focus:ring-0 transition-all" placeholder="Ex: Estou disperso..." required></textarea>
+                    <label class="label p-0 mb-2"><span class="label-text font-bold text-xs text-brand opacity-70">COMO VOCÊ SE SENTE?</span></label>
+                    <textarea name="objetivo" class="textarea textarea-bordered h-28 bg-gray-50" required></textarea>
                 </div>
-
                 <div class="form-control w-full mb-8">
                     <label class="label p-0 mb-2">
-                        <span class="label-text font-bold text-xs text-brand tracking-widest uppercase opacity-70">Duração (Máx: 10 min)</span>
+                        <span class="label-text font-bold text-xs text-brand opacity-70">DURAÇÃO</span>
                         <span id="timeVal" class="font-bold text-brand text-sm bg-brand/10 px-2 py-1 rounded">5 min</span>
                     </label>
                     <input type="range" min="1" max="10" value="5" class="range range-xs accent-[#2A8C82]" style="color: #2A8C82;" name="duracaoMinutos" oninput="timeVal.innerText = this.value + ' min'" />
                 </div>
-
                 <div class="modal-action flex justify-between items-center">
-                    <form method="dialog"><button class="btn btn-ghost text-gray-400 hover:text-gray-600">Cancelar</button></form>
-                    <button type="submit" class="btn btn-brand px-8 shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all">CRIAR COM IA ✨</button>
+                    <form method="dialog"><button class="btn btn-ghost text-gray-400">Cancelar</button></form>
+                    <button type="submit" onclick="this.classList.add('loading', 'btn-disabled')" class="btn btn-brand px-8">CRIAR COM IA ✨</button>
                 </div>
             </form>
         </div>
         <form method="dialog" class="modal-backdrop"><button>close</button></form>
     </dialog>
+
+
+    <dialog id="timer_modal" class="modal backdrop-blur-md">
+        <div class="modal-box bg-brand text-white text-center py-12">
+            <h3 id="timerTitle" class="font-bold text-3xl mb-2 opacity-90">Título do Ritual</h3>
+            <p class="opacity-70 mb-8">Concentre-se e respire.</p>
+            
+            <div class="text-8xl font-black font-mono mb-8 tracking-widest">
+                <span id="timerDisplay">00:00</span>
+            </div>
+            
+            <div class="modal-action justify-center">
+                <form method="dialog">
+                    <button onclick="pararTimer()" class="btn btn-white text-brand hover:bg-gray-200 px-8 font-bold">
+                        Encerrar Ritual
+                    </button>
+                </form>
+            </div>
+        </div>
+    </dialog>
+
+    <script>
+        let interval; 
+
+        function iniciarTimer(minutos, titulo) {
+            
+            document.getElementById('timerTitle').innerText = titulo;
+            
+           
+            let tempoRestante = minutos * 60;
+            
+            const display = document.getElementById('timerDisplay');
+            const modal = document.getElementById('timer_modal');
+
+            
+            modal.showModal();
+
+           
+            function atualizarDisplay() {
+                let m = Math.floor(tempoRestante / 60);
+                let s = tempoRestante % 60;
+                
+                
+                m = m < 10 ? '0' + m : m;
+                s = s < 10 ? '0' + s : s;
+                
+                display.innerText = `${m}:${s}`;
+
+                if (tempoRestante <= 0) {
+                    clearInterval(interval);
+                    display.innerText = "FIM!";
+                    // Poderia tocar um som aqui
+                }
+                tempoRestante--;
+            }
+
+            
+            atualizarDisplay();
+            clearInterval(interval); 
+            interval = setInterval(atualizarDisplay, 1000);
+        }
+
+        function pararTimer() {
+            clearInterval(interval);
+        }
+    </script>
 
 </body>
 </html>
