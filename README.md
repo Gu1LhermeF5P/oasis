@@ -9,6 +9,12 @@
 > **FIAP - Java Advanced** | Solução de bem-estar corporativo com Inteligência Artificial e Arquitetura Resiliente.
 
 ---
+## 👥 Integrantes do Grupo
+
+| Nome | RM |
+| :--- | :--- |
+| Larissa de Freitas Moura | 555136 |
+| Guilherme Francisco | 557648 |
 
 ## 📖 Sobre o Projeto
 
@@ -122,11 +128,34 @@ br.com.fiap.oasis.oasis
 ├── service         # Regras de Negócio (CRUD, IA, Lógica de Tempo)
 ├── messaging       # Consumidores de filas (RabbitMQ Listener)
 └── exception       # Manipulador global de exceções
-## 👥 Integrantes do Grupo
+## 🏗️ Arquitetura da Solução
 
-| Nome | RM |
-| :--- | :--- |
-| Larissa de Freitas Moura | 555136 |
-| Guilherme Francisco | 557648 |
+```mermaid
+graph TD
+    %% Atores e Pontos de Entrada
+    User((Usuário)) -->|HTTPS| WebApp[Azure Web App<br>Java Spring Boot]
+    Dev[Developer] -->|Git Push| AZRepo[Azure Repos]
+
+    %% Fluxo DevOps
+    subgraph CI_CD [Azure DevOps Pipeline]
+        AZRepo -->|Trigger| Build[Build Pipeline<br>Maven + Tests]
+        Build -->|Artifact| Release[Release Pipeline]
+        Release -->|Deploy| WebApp
+    end
+
+    %% Infraestrutura Nuvem
+    subgraph Cloud [Infraestrutura Azure PaaS]
+        WebApp -->|Persistência| SQL[(Azure SQL Database)]
+        WebApp -->|Mensageria| Rabbit[RabbitMQ<br>Container]
+    end
+
+    %% Integrações Externas
+    WebApp -.->|API REST| AI[IA Generativa<br>Groq / OpenAI]
+
+    %% Estilização
+    style WebApp fill:#5c2d91,stroke:#fff,color:#fff
+    style SQL fill:#0078d4,stroke:#fff,color:#fff
+    style AZRepo fill:#cb2e6d,stroke:#fff,color:#fff
+    style AI fill:#21a366,stroke:#fff,color:#fff
 
 © 2025 Oasis Tech. All rights reserved.
