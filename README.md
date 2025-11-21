@@ -25,7 +25,8 @@ A aplicação foi construída seguindo os princípios de **arquitetura resilient
 ### 🌐 Deploy em Nuvem
 A aplicação está rodando na nuvem (Railway):
 **[Acessar OASIS ](https://oasis-production-0020.up.railway.app/login)** 
-
+A aplicação está rodando na nuvem (Azure):
+**[Acessar OASIS ](https://app-oasis-rm557648-rm55136.azurewebsites.net )** 
 ---
 
 ## 🚀 Funcionalidades Principais
