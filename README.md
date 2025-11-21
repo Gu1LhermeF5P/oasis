@@ -136,51 +136,5 @@ br.com.fiap.oasis.oasis
 ![AI](https://img.shields.io/badge/Spring_AI-Generative-blue?style=for-the-badge)
 ![Docker](https://img.shields.io/badge/Docker-Container-blue?style=for-the-badge&logo=docker)
 
-## 🏗️ Arquitetura da Solução
-
-O diagrama abaixo ilustra o fluxo de DevOps e a infraestrutura em nuvem, destacando a separação de responsabilidades (PaaS).
-
-```mermaid
-graph TD
-    %% --- Estilos ---
-    classDef azure fill:#0078d4,stroke:#fff,color:#fff,stroke-width:2px;
-    classDef devops fill:#cb2e6d,stroke:#fff,color:#fff,stroke-width:2px;
-    classDef external fill:#21a366,stroke:#fff,color:#fff,stroke-width:2px;
-    classDef actor fill:#333,stroke:#fff,color:#fff;
-
-    %% --- Atores ---
-    User((Usuário)):::actor
-    Dev[Desenvolvedor]:::actor
-
-    %% --- Área DevOps ---
-    subgraph AZURE_DEVOPS [⚡ Ciclo DevOps]:::devops
-        direction TB
-        Repo[Azure Repos<br>Código Git]
-        Build[Build Pipeline<br>Maven + Testes]
-        Release[Release Pipeline<br>Deploy Automático]
-        
-        Dev -->|Push Code| Repo
-        Repo -->|Trigger| Build
-        Build -->|Artefato .jar| Release
-    end
-
-    %% --- Área Nuvem Azure ---
-    subgraph AZURE_CLOUD [☁️ Azure PaaS]:::azure
-        direction TB
-        WebApp[Azure Web App<br>Java Spring Boot]
-        SQL[(Azure SQL Database)]
-        Rabbit[RabbitMQ / Azure Service Bus<br>Filas de Eventos]
-        
-        WebApp -->|JDBC / Persistência| SQL
-        WebApp -->|AMQP / Mensageria| Rabbit
-    end
-
-    %% --- Serviços Externos ---
-    AI[API IA Generativa<br>Groq / OpenAI]:::external
-
-    %% --- Fluxo Principal ---
-    Release -->|Deploy| WebApp
-    User -->|HTTPS| WebApp
-    WebApp <-->|REST| AI
 
 © 2025 Oasis Tech. All rights reserved.
