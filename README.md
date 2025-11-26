@@ -29,7 +29,12 @@ A aplicação está rodando na nuvem (Railway):
 A aplicação está rodando na nuvem (Azure):
 **[Acessar OASIS ](https://app-oasis-rm557648-rm55136.azurewebsites.net )** 
 ---
+---
 
+## 📺 Demonstração
+**[CLIQUE AQUI PARA ASSISTIR AO VÍDEO NO YOUTUBE](https://www.youtube.com/watch?v=l6i0huCIaQQ&t=69s)**
+**PITCH : (https://www.youtube.com/watch?v=1TRcodmcshY)
+---
 ## 🚀 Funcionalidades Principais
 
 * **✨ Geração de Rituais com IA:** Integração com LLMs (Groq/Google Gemini) para criar sugestões personalizadas baseadas no sentimento do usuário.
